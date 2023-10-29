@@ -8,6 +8,7 @@ from datetime import date, timedelta
 
 import joblib
 import pandas as pd
+from tabpfn import TabPFNClassifier
 
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
@@ -51,11 +52,29 @@ def upload(file: UploadFile = File(...)):
     return {"message": f"Successfuly uploaded {file.filename}"}
 
 
-def zap(arr):
-    for i in range(0, 6):
-        for j in range(0, 10):
-            arr[i][j] = random.randint(0, 1)
-    return arr
+def dtp_to_class_str(y_preds_dtp):
+    lst = [
+        'ДТП/Столкновение',
+        'ДТП/Наезд',
+        'ДТП/Съезд',
+        'ДТП/Опрокидывание',
+        'Не справился с управлением',
+        'Неисправность транспортного средства',
+        'Нарушение ПДД',
+        'ДТП/Падение пассажира',
+        'Возгорание транспортого средства'
+    ]
+    mass = [[] for i in range(len(y_preds_dtp))]
+
+    for i in range(len(y_preds_dtp)):
+        for ind, flag in enumerate(y_preds_dtp[i]):
+            print(ind)
+            print(mass[i])
+            print(y_preds_dtp[i])
+            if flag:
+                mass[i].append(lst[ind])
+
+    return mass
 
 
 @app.get("/pizdec")
@@ -69,12 +88,22 @@ def getInfo(date: datetime.date = '2023-03-28'):
     risk_factor_dtp = 0
     accident_percent = sum(sum(y_preds_dtp)) / (len(y_preds_dtp) * len(y_preds_dtp[0]))
 
+    y_preds_dtp = dtp_to_class_str(y_preds_dtp)
+    print(y_preds_dtp)
     if accident_percent <= 0.3:
         risk_factor_dtp = 0
     elif 0.3 < accident_percent <= 0.7:
         risk_factor_dtp = 1
     else:
         risk_factor_dtp = 2
+
+    # GKH predictions
+    model_gkh = joblib.load("Models/GKH.joblib")
+    X_preds_gkh = pd.read_csv('Data/GKH.csv')[20:31]
+    X_preds_gkh = X_preds_gkh[X_preds_gkh.columns[1:]]
+    # print(X_preds_gkh)
+    y_preds_gkh, p_eval = model_gkh.predict(X_preds_gkh, return_winning_probability=True)
+    # print(y_preds_gkh)
 
     dates = [date + timedelta(i) for i in range(10)]
 
@@ -92,15 +121,15 @@ def getInfo(date: datetime.date = '2023-03-28'):
             {
                 "dtp":
                     {
-                        dates[0]: "".join(map(str, y_preds_dtp[0])),
-                        dates[1]: "".join(map(str, y_preds_dtp[1])),
-                        dates[2]: "".join(map(str, y_preds_dtp[2])),
-                        dates[3]: "".join(map(str, y_preds_dtp[3])),
-                        dates[4]: "".join(map(str, y_preds_dtp[4])),
-                        dates[5]: "".join(map(str, y_preds_dtp[5])),
-                        dates[6]: "".join(map(str, y_preds_dtp[6])),
-                        dates[7]: "".join(map(str, y_preds_dtp[7])),
-                        dates[9]: "".join(map(str, y_preds_dtp[8])),
+                        dates[0]: ", ".join(y_preds_dtp[0]),
+                        dates[1]: ", ".join(y_preds_dtp[1]),
+                        dates[2]: ", ".join(y_preds_dtp[2]),
+                        dates[3]: ", ".join(y_preds_dtp[3]),
+                        dates[4]: ", ".join(y_preds_dtp[4]),
+                        dates[5]: ", ".join(y_preds_dtp[5]),
+                        dates[6]: ", ".join(y_preds_dtp[6]),
+                        dates[7]: ", ".join(y_preds_dtp[7]),
+                        dates[9]: ", ".join(y_preds_dtp[8]),
                         "risk_factor": risk_factor_dtp
                     },
                 "toxic":
@@ -133,16 +162,17 @@ def getInfo(date: datetime.date = '2023-03-28'):
                     },
                 "GKH":
                     {
-                        dates[0]: all_preds[3][0],
-                        dates[1]: all_preds[3][1],
-                        dates[2]: all_preds[3][2],
-                        dates[3]: all_preds[3][3],
-                        dates[4]: all_preds[3][4],
-                        dates[5]: all_preds[3][5],
-                        dates[6]: all_preds[3][6],
-                        dates[7]: all_preds[3][7],
-                        dates[8]: all_preds[3][8],
-                        dates[9]: all_preds[3][9],
+                        dates[0]: y_preds_gkh[0],
+                        dates[1]: y_preds_gkh[1],
+                        dates[2]: y_preds_gkh[2],
+                        dates[3]: y_preds_gkh[3],
+                        dates[4]: y_preds_gkh[4],
+                        dates[5]: y_preds_gkh[5],
+                        dates[6]: y_preds_gkh[6],
+                        dates[7]: y_preds_gkh[7],
+                        dates[8]: y_preds_gkh[8],
+                        dates[9]: y_preds_gkh[9],
+
                         "risk_factor": 0
                     },
                 "explosions":
