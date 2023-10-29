@@ -1,0 +1,15 @@
+.mapYa {
+    display: flex;
+    justify-content: center;
+
+    .map {
+        align-items: center;
+        justify-content: center;
+        width: 1000px;
+        height: 1000px;
+    }
+}
+
+[class*="copyrights-pane"] {
+    display: none !important;
+}

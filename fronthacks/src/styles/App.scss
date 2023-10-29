@@ -1,0 +1,157 @@
+@import 'variables.scss';
+
+section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+
+    @media (min-width: 950px) {
+        flex-direction: row;
+    }
+
+    @media (max-width: 950px) {
+        flex-direction: column;
+    }
+}
+
+.main-right {
+    flex: 3;
+    background: $mainColor;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-left {
+    flex: 2;
+    background: $darkBackgroundColor;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-part {
+    .main-right {
+        justify-content: center;
+        align-items: center;
+
+        @media (min-width: 950px) {
+            border-bottom-left-radius: 30px;
+            border-top-left-radius: 30px;
+        }
+
+        @media (max-width: 950px) {
+            border-top-right-radius: 30px;
+            border-top-left-radius: 30px;
+        }
+    }
+
+    .main-left {
+        align-items: center;
+        justify-content: center;
+
+        .tittle-web {
+            font-size: 70px;
+            margin: 20px;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: row;
+
+            .search {
+                flex: 1;
+            }
+
+            .btn {
+                flex: 1;
+            }
+        }
+
+        .error {
+            color: $red;
+        }
+
+        .message {
+            margin-top: 10px;
+            color: $white;
+        }
+
+        .radio-buttons-list {
+            display: flex;
+            justify-content: flex-start;
+            width: 80%;
+
+            .radio-btn {
+                flex: 1;
+                margin: 20px;
+            }
+        }
+
+        .res-days {
+            font-size: 22px;
+            border: 2px solid $secondMainColor;
+            border-radius: 10px;
+            margin: 20px;
+            width: 78%;
+
+            .day {
+                padding: 14px;
+                padding-left: 20px;
+                padding-right: 20px;
+                border-bottom: 2px solid $secondMainColor;
+                transition: 0.3s;
+
+                &:hover {
+                    transition: 0.3s;
+                    background-color: $secondMainColor;
+                    color: $darkBackgroundColor
+                }
+            }
+
+            .res {
+                padding: 14px;
+                padding-left: 20px;
+                padding-right: 20px;
+                transition: 0.3s;
+
+                &:hover {
+                    transition: 0.3s;
+                    background-color: $secondMainColor;
+                    color: $darkBackgroundColor
+                }
+            }
+        }
+
+        // .hello-message {
+        //     margin: 20px;
+
+        //     @media (min-width: 1015px) {
+        //         font-size: 78px;
+        //     }
+
+        //     @media (min-width: 800px) and (max-width: 1015px) {
+        //         font-size: 55px;
+        //     }
+
+        //     @media (max-width: 800px) {
+        //         font-size: 40px;
+        //     }
+        // }
+
+        // .upload-btn {
+        //     margin: 20px;
+        // }
+
+        // .upload-area {
+        //     margin: 20px;
+        // }
+
+        // .error-message {
+        //     color: $red;
+        //     font-size: 20px;
+        // }
+
+        // @media (max-width: 950px) {
+        //     text-align: center;
+        // }
+    }
+}
