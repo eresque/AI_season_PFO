@@ -79,6 +79,7 @@ def dtp_to_class_str(y_preds_dtp):
 
 @app.get("/pizdec")
 def getInfo(date: datetime.date = '2023-03-28'):
+    #################
     # DTP predictions
     model_dtp = joblib.load("Models/DTP.joblib")
     X_preds_dtp = pd.read_csv('Data/X_DTP.csv')[:10]
@@ -89,7 +90,7 @@ def getInfo(date: datetime.date = '2023-03-28'):
     accident_percent = sum(sum(y_preds_dtp)) / (len(y_preds_dtp) * len(y_preds_dtp[0]))
 
     y_preds_dtp = dtp_to_class_str(y_preds_dtp)
-    print(y_preds_dtp)
+
     if accident_percent <= 0.3:
         risk_factor_dtp = 0
     elif 0.3 < accident_percent <= 0.7:
@@ -97,13 +98,17 @@ def getInfo(date: datetime.date = '2023-03-28'):
     else:
         risk_factor_dtp = 2
 
+    #################
     # GKH predictions
     model_gkh = joblib.load("Models/GKH.joblib")
     X_preds_gkh = pd.read_csv('Data/GKH.csv')[20:31]
     X_preds_gkh = X_preds_gkh[X_preds_gkh.columns[1:]]
-    # print(X_preds_gkh)
+
     y_preds_gkh, p_eval = model_gkh.predict(X_preds_gkh, return_winning_probability=True)
-    # print(y_preds_gkh)
+
+    for i in range(len(y_preds_gkh)):
+        if y_preds_gkh[i] == "Аварии на электроэнергетических системах ":
+            y_preds_gkh[i] = "Аварии на эл.-энерг. системах "
 
     dates = [date + timedelta(i) for i in range(10)]
 
