@@ -78,11 +78,14 @@ def dtp_to_class_str(y_preds_dtp):
 
 
 @app.get("/pizdec")
-def getInfo(date: datetime.date = '2023-03-28'):
+def getInfo(date: datetime.date = '2023-03-27'):
+    window_high = random.randint(10, 150)
+    window_low = window_high - 10
+
     #################
     # DTP predictions
     model_dtp = joblib.load("Models/DTP.joblib")
-    X_preds_dtp = pd.read_csv('Data/X_DTP.csv')[:10]
+    X_preds_dtp = pd.read_csv('Data/X_DTP.csv')[window_low:window_high]
 
     y_preds_dtp = model_dtp.predict(X_preds_dtp)
 
@@ -101,7 +104,7 @@ def getInfo(date: datetime.date = '2023-03-28'):
     #################
     # GKH predictions
     model_gkh = joblib.load("Models/GKH.joblib")
-    X_preds_gkh = pd.read_csv('Data/GKH.csv')[20:31]
+    X_preds_gkh = pd.read_csv('Data/GKH.csv')[window_low:window_high]
     X_preds_gkh = X_preds_gkh[X_preds_gkh.columns[1:]]
 
     y_preds_gkh, p_eval = model_gkh.predict(X_preds_gkh, return_winning_probability=True)
