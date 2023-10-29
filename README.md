@@ -13,6 +13,7 @@
 ## Поднятие backend веб-сервисa
 ### Требования
 * Python 3.x, x >= 9
+* venv
 ### Команды
 ```commandline
 cd backhacks
