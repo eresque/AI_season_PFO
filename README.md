@@ -32,4 +32,4 @@ npm i
 npm run dev
 ```
 ### Итог
-Поднят backend по адресу `http://localhost:5173/`
+Поднят frontend по адресу `http://localhost:5173/`
