@@ -1,0 +1,16 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: ./fronthacks
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: ./backhack
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
