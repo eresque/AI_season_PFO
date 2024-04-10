@@ -8,9 +8,23 @@ services:
       - 3000:3000
     depends_on:
       - backend
+    networks:
+      test:
+        ipv4_address: 172.28.2.1
+        
   backend:
     build:
       context: ./backhack
       dockerfile: Dockerfile
     ports:
       - 8000:8000
+    networks:
+      test:
+        ipv4_address: 172.28.2.2
+      
+networks:
+  test:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
