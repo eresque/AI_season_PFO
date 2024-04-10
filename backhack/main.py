@@ -18,7 +18,7 @@ app = FastAPI(
 )
 
 origins = [
-    'http://172.22.0.3:3000',
+    'http://172.23.0.3:3000',
 ]
 app.add_middleware(
     CORSMiddleware,
