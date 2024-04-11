@@ -45,7 +45,7 @@ const App = (): JSX.Element => {
     async function fetchData(input: string) {
         setMessage(true);
         try {
-            const res = await axios.get(`http://89.223.30.145/:8000/pizdec?date=${input}`);
+            const res = await axios.get(`http://89.223.30.145:8000/pizdec?date=${input}`);
             console.log(res.data.event);
             setDtpData(res.data.event.dtp);
             setToxicData(res.data.event.toxic);
